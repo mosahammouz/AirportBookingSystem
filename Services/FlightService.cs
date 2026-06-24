@@ -137,4 +137,169 @@ public class FlightService
             _flights.AddRange(flights);
             Save();
         }
+        
+        //************************ ImportFromCsv ****************
+        public void ImportFromCsv(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("❌ File not found!");
+                return;
+            }
+
+            var lines = File.ReadAllLines(filePath);
+
+            List<Flight> importedFlights = new();
+
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                var parts = line.Split(',');
+
+                if (parts.Length != 9)
+                {
+                    Console.WriteLine($"❌ Invalid row skipped: {line}");
+                    continue;
+                }
+
+                try
+                {
+                    var flight = new Flight
+                    {
+                        Id = int.Parse(parts[0]),
+                        DepartureCountry = parts[1],
+                        DestinationCountry = parts[2],
+                        DepartureAirport = parts[3],
+                        ArrivalAirport = parts[4],
+                        DepartureDate = DateTime.Parse(parts[5]),
+                        EconomyPrice = decimal.Parse(parts[6]),
+                        BusinessPrice = decimal.Parse(parts[7]),
+                        FirstClassPrice = decimal.Parse(parts[8])
+                    };
+
+                    importedFlights.Add(flight);
+                }
+                catch
+                {
+                    Console.WriteLine($"❌ Error parsing row: {line}");
+                }
+            }
+
+            // Add to system
+            _flights.AddRange(importedFlights);
+
+            // Save to system file
+            Save();
+
+            Console.WriteLine($"✅ Successfully imported {importedFlights.Count} flights!");
+        }
+        
+        // ******************************  validation *****************
+        public void ShowFlightValidationRules()
+        {
+            Console.Clear();
+            Console.WriteLine("=== Flight Validation Rules ===");
+            Console.WriteLine();
+
+            Console.WriteLine("1. Departure Country:");
+            Console.WriteLine("   - Type: Free Text");
+            Console.WriteLine("   - Constraint: Required (cannot be empty)");
+            Console.WriteLine();
+
+            Console.WriteLine("2. Destination Country:");
+            Console.WriteLine("   - Type: Free Text");
+            Console.WriteLine("   - Constraint: Required (cannot be empty)");
+            Console.WriteLine();
+
+            Console.WriteLine("3. Departure Airport:");
+            Console.WriteLine("   - Type: String");
+            Console.WriteLine("   - Constraint: Required");
+            Console.WriteLine();
+
+            Console.WriteLine("4. Arrival Airport:");
+            Console.WriteLine("   - Type: String");
+            Console.WriteLine("   - Constraint: Required");
+            Console.WriteLine();
+
+            Console.WriteLine("5. Departure Date:");
+            Console.WriteLine("   - Type: DateTime");
+            Console.WriteLine("   - Constraint: Required");
+            Console.WriteLine("   - Rule: Must be Today or in the Future");
+            Console.WriteLine();
+
+            Console.WriteLine("6. Economy Price:");
+            Console.WriteLine("   - Type: Decimal");
+            Console.WriteLine("   - Constraint: Must be > 0");
+            Console.WriteLine();
+
+            Console.WriteLine("7. Business Price:");
+            Console.WriteLine("   - Type: Decimal");
+            Console.WriteLine("   - Constraint: Must be > 0 and > Economy Price");
+            Console.WriteLine();
+
+            Console.WriteLine("8. First Class Price:");
+            Console.WriteLine("   - Type: Decimal");
+            Console.WriteLine("   - Constraint: Must be > Business Price");
+            Console.WriteLine();
+
+            Console.WriteLine("\nPress any key to return...");
+            Console.ReadKey();
+        }
+        public List<ImportError> ImportWithValidation(string filePath)
+        {
+            List<ImportError> errors = new();
+            List<Flight> validFlights = new();
+
+            var lines = File.ReadAllLines(filePath);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var parts = lines[i].Split(',');
+
+                try
+                {
+                    var flight = new Flight
+                    {
+                        Id = int.Parse(parts[0]),
+                        DepartureCountry = parts[1],
+                        DestinationCountry = parts[2],
+                        DepartureAirport = parts[3],
+                        ArrivalAirport = parts[4],
+                        DepartureDate = DateTime.Parse(parts[5]),
+                        EconomyPrice = decimal.Parse(parts[6]),
+                        BusinessPrice = decimal.Parse(parts[7]),
+                        FirstClassPrice = decimal.Parse(parts[8])
+                    };
+
+                    // 🔥 VALIDATION RULES
+
+                    if (string.IsNullOrWhiteSpace(flight.DepartureCountry))
+                        throw new Exception("Departure country is required");
+
+                    if (flight.DepartureDate < DateTime.Today)
+                        throw new Exception("Date must be today or future");
+
+                    if (flight.EconomyPrice <= 0)
+                        throw new Exception("Prices must be > 0");
+
+                    validFlights.Add(flight);
+                }
+                catch (Exception ex)
+                {
+                    errors.Add(new ImportError
+                    {
+                        Row = i + 1,
+                        Line = lines[i],
+                        Error = ex.Message
+                    });
+                }
+            }
+
+            _flights.AddRange(validFlights);
+            Save();
+
+            return errors;
+        }
 }

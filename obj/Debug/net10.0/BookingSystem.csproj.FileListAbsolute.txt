@@ -12,3 +12,4 @@ C:\Users\MousaHammouz\RiderProjects\BookingSystem\obj\Debug\net10.0\refint\Booki
 C:\Users\MousaHammouz\RiderProjects\BookingSystem\obj\Debug\net10.0\BookingSystem.pdb
 C:\Users\MousaHammouz\RiderProjects\BookingSystem\obj\Debug\net10.0\BookingSystem.genruntimeconfig.cache
 C:\Users\MousaHammouz\RiderProjects\BookingSystem\obj\Debug\net10.0\ref\BookingSystem.dll
+C:\Users\MousaHammouz\RiderProjects\BookingSystem\obj\Debug\net10.0\BookingSystem.sourcelink.json

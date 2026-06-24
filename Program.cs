@@ -20,7 +20,7 @@ while (running)
         Console.WriteLine("2. Book Flight");
         Console.WriteLine("3. View My Bookings");
         Console.WriteLine("4. Cancel Booking");
-        Console.WriteLine("5. Modify a book");
+        
         string choicePassenger = Console.ReadLine();
         if (choicePassenger == "1")
 {
@@ -207,7 +207,6 @@ while (running)
                 }
             }
         }
-
         if (choicePassenger == "4")
         {   
             Console.WriteLine("please enter your Booking id to cancel it : ");
@@ -221,11 +220,148 @@ while (running)
 
     if (choice == "2")
     {
-        
+        ShowManagerMenu();
     }
 
     if (choice == "3")
     {
         running = false;
+    }
+}
+ void ShowManagerMenu()
+{
+    while (true)
+    {
+        Console.Clear();
+        Console.WriteLine("=== Manager Menu ===");
+        Console.WriteLine("1. Filter Bookings");
+        Console.WriteLine("2. Import Flights (CSV)");
+        Console.WriteLine("3. Validate Flights Rules");
+        Console.WriteLine("4. Back");
+        Console.WriteLine();
+
+        Console.Write("Choose: ");
+        string? choice = Console.ReadLine();
+
+        if (choice == "1")
+        {
+            Console.Clear();
+            Console.WriteLine("=== Filter Bookings ===");
+            Console.WriteLine();
+            Console.WriteLine("Filter by:");
+            Console.WriteLine("1. Passenger Name");
+            Console.WriteLine("2. Flight ID");
+            Console.WriteLine("3. Maximum Price");
+            Console.WriteLine("4. Show All");
+            Console.WriteLine();
+
+            Console.Write("Choose filter type: ");
+            string? filterChoice = Console.ReadLine();
+
+            string? passengerName = null;
+            int? flightId = null;
+            decimal? maxPrice = null;
+
+            if (filterChoice == "1")
+            {
+                Console.Write("Enter Passenger Name: ");
+                passengerName = Console.ReadLine();
+            }
+            else if (filterChoice == "2")
+            {
+                Console.Write("Enter Flight ID: ");
+                if (int.TryParse(Console.ReadLine(), out int id))
+                    flightId = id;
+            }
+            else if (filterChoice == "3")
+            {
+                Console.Write("Enter Maximum Price: ");
+                if (decimal.TryParse(Console.ReadLine(), out decimal price))
+                    maxPrice = price;
+            }
+            else if (filterChoice == "4")
+            {
+                Console.WriteLine("Showing all bookings...");
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice!");
+                Console.ReadKey();
+                continue;
+            }
+
+            var results = bookingService.FilterBookings(
+                passengerName,
+                flightId,
+                null,
+                null,
+                null,
+                maxPrice
+            );
+
+            Console.Clear();
+
+            if (results.Count == 0)
+            {
+                Console.WriteLine("No bookings found.");
+            }
+            else
+            {
+                Console.WriteLine($"Found {results.Count} booking(s):\n");
+
+                foreach (var b in results)
+                {
+                    Console.WriteLine($"Booking ID: {b.Id}");
+                    Console.WriteLine($"Passenger: {b.PassengerName}");
+                    Console.WriteLine($"Flight ID: {b.FlightId}");
+                    Console.WriteLine($"Class: {b.Class}");
+                    Console.WriteLine($"Price: {b.Price}");
+                    Console.WriteLine("----------------------------");
+                }
+            }
+
+            Console.WriteLine("\nPress any key to continue...");
+            Console.ReadKey();
+        }
+        else if (choice == "2")
+        {
+            Console.Write("Enter file name (example: NewFile.csv): ");
+            string fileName = Console.ReadLine();
+            string path = Path.Combine("Data", fileName);
+            var errors = flightService.ImportWithValidation(path);
+            Console.Clear();
+            if (errors.Count == 0)
+            {
+                Console.WriteLine("All flights imported successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Import finished with errors:\n");
+
+                foreach (var e in errors)
+                {
+                    Console.WriteLine($"Row {e.Row}: {e.Error}");
+                    Console.WriteLine($"Data: {e.Line}");
+                    Console.WriteLine("----------------------");
+                }
+            }
+
+            Console.WriteLine("\nPress any key...");
+            Console.ReadKey();
+        }
+        else if (choice == "3")
+        {
+            flightService.ShowFlightValidationRules();
+            Console.ReadKey();
+        }
+        else if (choice == "4")
+        {
+            return; // back to main menu
+        }
+        else
+        {
+            Console.WriteLine("Invalid option!");
+            Console.ReadKey();
+        }
     }
 }

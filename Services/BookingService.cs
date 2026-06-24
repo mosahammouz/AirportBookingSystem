@@ -116,4 +116,63 @@ public class BookingService
                .Equals(name, StringComparison.OrdinalIgnoreCase))
            .ToList();
    }
+   
+   //*********************** BOOKING SEARCH ********************
+    public List<Booking> FilterBookings(
+       string? passengerName = null,
+       int? flightId = null,
+       string? departureCountry = null,
+       string? destinationCountry = null,
+       FlightClass? flightClass = null,
+       decimal? maxPrice = null)
+   {
+       IEnumerable<Booking> query = _bookings;
+
+       // Passenger filter
+       if (!string.IsNullOrWhiteSpace(passengerName))
+       {
+           query = query.Where(b =>
+               b.PassengerName.Equals(passengerName, StringComparison.OrdinalIgnoreCase));
+       }
+
+       // Flight ID filter
+       if (flightId.HasValue)
+       {
+           query = query.Where(b => b.FlightId == flightId.Value);
+       }
+
+       // Class filter
+       if (flightClass.HasValue)
+       {
+           query = query.Where(b => b.Class == flightClass.Value);
+       }
+
+       // Price filter
+       if (maxPrice.HasValue)
+       {
+           query = query.Where(b => b.Price <= maxPrice.Value);
+       }
+
+       // NOTE: These 2 require access to Flight data
+       if (!string.IsNullOrWhiteSpace(departureCountry) ||
+           !string.IsNullOrWhiteSpace(destinationCountry))
+       {
+           query = query.Where(b =>
+           {
+               var flight = _flightService.GetById(b.FlightId); 
+
+               if (flight == null) return false;
+
+               bool matchDeparture = string.IsNullOrWhiteSpace(departureCountry) ||
+                                     flight.DepartureCountry.Equals(departureCountry, StringComparison.OrdinalIgnoreCase);
+
+               bool matchDestination = string.IsNullOrWhiteSpace(destinationCountry) ||
+                                       flight.DestinationCountry.Equals(destinationCountry, StringComparison.OrdinalIgnoreCase);
+
+               return matchDeparture && matchDestination;
+           });
+       }
+
+       return query.ToList();
+   }
 }
