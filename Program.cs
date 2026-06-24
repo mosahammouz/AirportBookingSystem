@@ -5,7 +5,7 @@ bool running = true;
 FlightService flightService = new FlightService();
 BookingService bookingService = new BookingService(flightService);
 while (running)
-{
+{   Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("=== Airport Booking System ===");
     Console.WriteLine("1. Passenger");
     Console.WriteLine("2. Manager");
@@ -14,7 +14,7 @@ while (running)
     string choice = Console.ReadLine();
 
     if (choice == "1")
-    {
+    {    Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("--- Passenger Menu ---");
         Console.WriteLine("1. Search Flights");
         Console.WriteLine("2. Book Flight");
@@ -35,6 +35,7 @@ while (running)
     while (!exitSearchMenu)
     {
         Console.Clear();
+        Console.ForegroundColor = ConsoleColor.Magenta;
         Console.WriteLine("=== Search Flights ===");
         Console.WriteLine("1. Departure Country");
         Console.WriteLine("2. Destination Country");
@@ -45,7 +46,7 @@ while (running)
         Console.WriteLine("7. Maximum Price");
         Console.WriteLine("8. Search");
         Console.Write("Choose a filter: ");
-
+        Console.ResetColor();
         string? choiceF = Console.ReadLine();
            
         switch (choiceF)
@@ -226,6 +227,7 @@ while (running)
     if (choice == "3")
     {
         running = false;
+        Console.ResetColor();
     }
 }
  void ShowManagerMenu()
