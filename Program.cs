@@ -1,11 +1,13 @@
 ﻿using BookingSystem.Models;
 using BookingSystem.Services;
+using BookingSystem.Storage;
 
 bool running = true;
 FlightService flightService = new FlightService();
 BookingService bookingService = new BookingService(flightService);
 while (running)
-{   Console.ForegroundColor = ConsoleColor.Yellow;
+{   Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Yellow;
     Console.WriteLine("=== Airport Booking System ===");
     Console.WriteLine("1. Passenger");
     Console.WriteLine("2. Manager");
@@ -20,6 +22,7 @@ while (running)
         Console.WriteLine("2. Book Flight");
         Console.WriteLine("3. View My Bookings");
         Console.WriteLine("4. Cancel Booking");
+        Console.WriteLine("5. Display all available flights");
         
         string choicePassenger = Console.ReadLine();
         if (choicePassenger == "1")
@@ -214,6 +217,39 @@ while (running)
             string id = Console.ReadLine();
             int idInt = int.Parse(id);
             bookingService.Cancel(idInt);
+        }
+
+        if (choicePassenger == "5")
+        {
+            List<Flight> allFlights = flightService.GetAll();
+            Console.Clear();
+            Console.WriteLine("========== Available Flights ==========\n");
+            if (allFlights.Count == 0)
+            {
+                Console.WriteLine("No flights are currently available.");
+                return;
+            }
+
+            Console.WriteLine(
+                $"{"ID",-4} {"From",-15} {"To",-15} {"Airport",-20} {"Departure",-15} {"Economy",-12} {"Business",-12} {"First",-12}");
+
+            Console.WriteLine(new string('-', 105));
+            foreach (var flight in allFlights)
+            {
+                Console.WriteLine(
+                    $"{flight.Id,-4} " +
+                    $"{flight.DepartureCountry,-15} " +
+                    $"{flight.DestinationCountry,-15} " +
+                    $"{flight.ArrivalAirport,-20} " +
+                    $"{flight.DepartureDate:yyyy-MM-dd,-15} " +
+                    $"{flight.EconomyPrice,10:C} " +
+                    $"{flight.BusinessPrice,10:C} " +
+                    $"{flight.FirstClassPrice,10:C}");
+            }
+
+            Console.WriteLine("\n=======================================");
+            Console.WriteLine("Press any key to return to the menu...");
+            Console.ReadKey();
         }
 
 
