@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem", "BookingSystem.csproj", "{2FCD69A6-B7E0-4D39-82DF-D128FB86CAAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingSystem.Test", "BookingSystem.Test\BookingSystem.Test.csproj", "{05CA601E-20DB-42FA-986A-1FAA742D1F4B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,12 @@ Global
 		{2FCD69A6-B7E0-4D39-82DF-D128FB86CAAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FCD69A6-B7E0-4D39-82DF-D128FB86CAAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FCD69A6-B7E0-4D39-82DF-D128FB86CAAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05CA601E-20DB-42FA-986A-1FAA742D1F4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05CA601E-20DB-42FA-986A-1FAA742D1F4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05CA601E-20DB-42FA-986A-1FAA742D1F4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05CA601E-20DB-42FA-986A-1FAA742D1F4B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

@@ -12,17 +12,19 @@ while (running)
     Console.WriteLine("1. Passenger");
     Console.WriteLine("2. Manager");
     Console.WriteLine("3. Exit");
-
+ 
     string choice = Console.ReadLine();
 
     if (choice == "1")
-    {    Console.ForegroundColor = ConsoleColor.Cyan;
+    {   Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("--- Passenger Menu ---");
         Console.WriteLine("1. Search Flights");
         Console.WriteLine("2. Book Flight");
         Console.WriteLine("3. View My Bookings");
         Console.WriteLine("4. Cancel Booking");
         Console.WriteLine("5. Display all available flights");
+        
+        
         
         string choicePassenger = Console.ReadLine();
         if (choicePassenger == "1")
@@ -217,6 +219,7 @@ while (running)
             string id = Console.ReadLine();
             int idInt = int.Parse(id);
             bookingService.Cancel(idInt);
+            Console.WriteLine("ur booking has been cancelled successfully ");
         }
 
         if (choicePassenger == "5")
