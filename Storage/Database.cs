@@ -2,8 +2,20 @@ namespace BookingSystem.Storage;
 
 public static class Database
 {
-    public static string BasePath =
-        Path.Combine(Directory.GetCurrentDirectory(), "Data");
+    public static string BasePath
+    {
+        get
+        {
+            var directory = new DirectoryInfo(AppContext.BaseDirectory);
+
+            while (directory != null && directory.Name != "BookingSystem")
+            {
+                directory = directory.Parent;
+            }
+
+            return Path.Combine(directory!.FullName, "Data");
+        }
+    }
 
     public static string FlightsPath =
         Path.Combine(BasePath, "flights.csv");

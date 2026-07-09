@@ -5,6 +5,12 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
     </PropertyGroup>
 
+    <ItemGroup>
+        <Compile Remove="BookingSystem.Test\**\*.cs" />
+        <EmbeddedResource Remove="BookingSystem.Test\**\*" />
+        <None Remove="BookingSystem.Test\**\*" />
+    </ItemGroup>
 </Project>
